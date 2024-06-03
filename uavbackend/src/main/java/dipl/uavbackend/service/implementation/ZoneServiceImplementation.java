@@ -66,8 +66,8 @@ public class ZoneServiceImplementation implements ZoneService {
 
                     // додати ризик ураження до списку
                     zone.getTerminators().add(new ZoneCountermeasure(cmCount, countermeasure.getNChannels(),
-                            countermeasure.getDamageProbability(), item.getCredibility(),
-                            countermeasure.getCmType(), countermeasure.getNChannels(), 0));
+                            countermeasure.getDamageProbability(), item.getCredibility(), countermeasure.getCmType(),
+                            countermeasure.getNChannels(), 0, 0.0));
 
                     // з Credibility тут як середня температура по лікарні
                     // бо складаємо до купи кулемет та С-300
@@ -79,8 +79,8 @@ public class ZoneServiceImplementation implements ZoneService {
 
                     // додати ризик ураження до списку
                     zone.getTerminators().add(new ZoneCountermeasure(cmCount, countermeasure.getNChannels(),
-                            countermeasure.getDamageProbability(), item.getCredibility(),
-                            countermeasure.getCmType(), countermeasure.getNChannels(), 0));
+                            countermeasure.getDamageProbability(), item.getCredibility(), countermeasure.getCmType(),
+                            countermeasure.getNChannels(), 0, 0.0));
                 } else {
                     double countermeasureDetection = item.getCountermeasure().getDamageProbability();
                     zone.setDetection(1 - (1 - zone.getDetection()) * (1 - countermeasureDetection));
@@ -88,8 +88,8 @@ public class ZoneServiceImplementation implements ZoneService {
 
                     // додати ризик виявлення до списку
                     zone.getDetectors().add(new ZoneCountermeasure(cmCount, countermeasure.getNChannels(),
-                            countermeasure.getDamageProbability(), item.getCredibility(),
-                            countermeasure.getCmType(), countermeasure.getNChannels(), 0));
+                            countermeasure.getDamageProbability(), item.getCredibility(), countermeasure.getCmType(),
+                            countermeasure.getNChannels(), 0, 0.0));
                 }
             }
             cmCount++;
@@ -101,13 +101,13 @@ public class ZoneServiceImplementation implements ZoneService {
             damageProbability = NB_MIN;
         }
 
-//        if (zone.getDetectors().size() == 0) {
-//            zone.setDetection(0.2);
-//        }
+        if (zone.getDetectors().size() == 0) {
+            zone.setDetection(0.05);
+        }
 
-//        if (zone.getTerminators().size() == 0) {
-//            damageProbability = 0.1;
-//        }
+        if (zone.getTerminators().size() == 0) {
+            damageProbability = 0.05;
+        }
 
         zone.setDamageProbability(damageProbability);
         return zone;

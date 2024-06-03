@@ -43,10 +43,10 @@ public class Countermeasure {
     private int nChannelsLeft = nChannels;
 
     public void useChannel() {
-        nChannels--;
+        nChannelsLeft--;
     }
 
     public void rechargeOneChannel() {
-        nChannels++;
+        nChannelsLeft++;
     }
 }

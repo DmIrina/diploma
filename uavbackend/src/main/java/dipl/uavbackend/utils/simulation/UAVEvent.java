@@ -37,11 +37,31 @@ public class UAVEvent extends Event {
                             ", detected in zone " + uavGroup.getCurrZone().getId() + "[" + uavGroup.getCurrZone().getX() +
                             " " + uavGroup.getCurrZone().getY() + " " + uavGroup.getCurrZone().getZ() + "]\n");
 
-                    //for (ZoneCountermeasure countermeasure : UAVSimulation.route.get(currZoneIndex).getTerminators()) {
                     for (ZoneCountermeasure countermeasure : UAVSimulation.route.get(currZoneIndex).getTerminators()) {
+
+
                         int indexEffectiveCM = countermeasure.getIndexInEffectiveCMList();
 
-                        //for (int c = 0; c < countermeasure.getNChannelsLeft(); c++) {
+                        //int nTimes = (getTime() - countermeasure.getLastTimeShelling()) / UAVSimulation.getTimeToRecharge();
+
+
+                        if (getTime() - countermeasure.getLastTimeShelling() >= UAVSimulation.getTimeToRecharge()){
+                            double getTime = getTime();
+                            double lastShel = countermeasure.getLastTimeShelling();
+                            double timeRecharge = UAVSimulation.getTimeToRecharge();
+                            int nTimes = (int) ((getTime - lastShel) / timeRecharge);
+
+                            double newTimeLastChange = lastShel + (timeRecharge * nTimes);
+                            countermeasure.setLastTimeShelling(newTimeLastChange);
+
+                            for (int n = 0; n < nTimes; n++) {
+                                if (UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannelsLeft() <
+                                        UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannels()){
+                                    UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().rechargeOneChannel();
+                                }
+                            }
+                        }
+
                         for (int efCM = 0; efCM < UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannelsLeft(); efCM++) {
                             if (uavGroup.getUavCountInGroup() > 0) {
                                 double damageProbability = countermeasure.getDamageProbability();
@@ -51,15 +71,13 @@ public class UAVEvent extends Event {
                                 if (!countermeasure.getCmType().equals("РЛС")) {
                                     countermeasure.useChannel();
                                     UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().useChannel();
+
                                 }
-
-
 
                                 double hitProbability = getEffectiveDamageProbability(speed, uavCharacteristics, damageProbability);
 
                                 // UAV is hit
                                 if (random.nextDouble() < hitProbability) {
-
                                     uavGroup.hitUAV();
 
                                     UAVSimulation.addToDangerList((uavGroup.getCurrZone().getX() + " " +
@@ -83,15 +101,17 @@ public class UAVEvent extends Event {
                                         continue;
                                     }
                                 }
-                                // here
+
                                 System.out.println("group " + uavGroup.getId() + " , uavs " + uavGroup.getUavCountInGroup() +
                                         ", efCM " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getCountermeasureName() +
                                         " id " + indexEffectiveCM +
                                         ", channels " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannelsLeft());
 
                             }
-                        }
-                    }
+                        } // nchannels
+                        countermeasure.setLastTimeShelling(getTime());
+                    } // terminators
+
                 }
 
                 if (uavGroup.getUavCountInGroup() > 0) {
@@ -157,7 +177,7 @@ public class UAVEvent extends Event {
         return effectiveDamageProbability;
     }
 
-    private void recalculateChannels() {
+    private void recalculateChannels(double timeForRecharge, double currTime) {
 
     }
 

@@ -25,7 +25,7 @@ public class UAVSimulation {
     private ModelParamDto modelParam;
     private RouteParamDto routeParam;
     private double timeBetweenGroups;
-    private double timeRechargeCM;
+    private static double timeRechargeCM;
     private final int N_TOP_DANGER = 10;
     public static List<Zone> route;
     private Uav uav;
@@ -215,6 +215,10 @@ public class UAVSimulation {
 
     protected static void addToResults(String s) {
         results.append(s);
+    }
+
+    protected static double getTimeToRecharge() {
+        return timeRechargeCM;
     }
 
     public String getResults() {

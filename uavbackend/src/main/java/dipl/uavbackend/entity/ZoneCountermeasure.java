@@ -23,6 +23,8 @@ public class ZoneCountermeasure implements Serializable {
     @Setter(AccessLevel.NONE)
     private int uavCountEliminated;
 
+    private double lastTimeShelling;
+
     public void useChannel() {
         nChannelsLeft--;
     }
