@@ -38,13 +38,7 @@ public class UAVEvent extends Event {
                             " " + uavGroup.getCurrZone().getY() + " " + uavGroup.getCurrZone().getZ() + "]\n");
 
                     for (ZoneCountermeasure countermeasure : UAVSimulation.route.get(currZoneIndex).getTerminators()) {
-
-
                         int indexEffectiveCM = countermeasure.getIndexInEffectiveCMList();
-
-                        //int nTimes = (getTime() - countermeasure.getLastTimeShelling()) / UAVSimulation.getTimeToRecharge();
-
-
                         if (getTime() - countermeasure.getLastTimeShelling() >= UAVSimulation.getTimeToRecharge()){
                             double getTime = getTime();
                             double lastShel = countermeasure.getLastTimeShelling();
@@ -71,7 +65,6 @@ public class UAVEvent extends Event {
                                 if (!countermeasure.getCmType().equals("РЛС")) {
                                     countermeasure.useChannel();
                                     UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().useChannel();
-
                                 }
 
                                 double hitProbability = getEffectiveDamageProbability(speed, uavCharacteristics, damageProbability);
@@ -102,15 +95,15 @@ public class UAVEvent extends Event {
                                     }
                                 }
 
-                                System.out.println("group " + uavGroup.getId() + " , uavs " + uavGroup.getUavCountInGroup() +
-                                        ", efCM " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getCountermeasureName() +
-                                        " id " + indexEffectiveCM +
-                                        ", channels " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannelsLeft());
+//                                System.out.println("group " + uavGroup.getId() + " , uavs " + uavGroup.getUavCountInGroup() +
+//                                        ", efCM " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getCountermeasureName() +
+//                                        " id " + indexEffectiveCM +
+//                                        ", channels " + UAVSimulation.listCM.get(indexEffectiveCM).getCountermeasure().getNChannelsLeft());
 
                             }
-                        } // nchannels
+                        }
                         countermeasure.setLastTimeShelling(getTime());
-                    } // terminators
+                    }
 
                 }
 
@@ -176,9 +169,4 @@ public class UAVEvent extends Event {
 
         return effectiveDamageProbability;
     }
-
-    private void recalculateChannels(double timeForRecharge, double currTime) {
-
-    }
-
 }
